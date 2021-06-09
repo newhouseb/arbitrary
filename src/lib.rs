@@ -821,6 +821,7 @@ impl<'a> Arbitrary<'a> for &'a str {
         match str::from_utf8(&u.peek_bytes(size).unwrap()) {
             Ok(s) => {
                 u.bytes(size).unwrap();
+                let s = match s.find("\u{0}") { Some(i) => { &s[0..i] }, None => { s } };
                 Ok(s)
             }
             Err(e) => {
@@ -830,6 +831,7 @@ impl<'a> Arbitrary<'a> for &'a str {
                     debug_assert!(str::from_utf8(valid).is_ok());
                     str::from_utf8_unchecked(valid)
                 };
+                let s = match s.find("\u{0}") { Some(i) => { &s[0..i] }, None => { s } };
                 Ok(s)
             }
         }
